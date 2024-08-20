@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 1rem;
+  background: hsl(202, 86%, 94%);
+}

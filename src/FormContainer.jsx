@@ -8,7 +8,7 @@ const FormContainer = () => {
     amount: "",
     term: "",
     interestRate: "",
-    mortgageType: "repayment",
+    mortgageType: "",
   });
 
   const dispatch = useDispatch();
@@ -26,7 +26,7 @@ const FormContainer = () => {
       amount: "",
       term: "",
       interestRate: "",
-      mortgageType: "repayment",
+      mortgageType: "",
     });
   };
 
@@ -76,7 +76,7 @@ const FormContainer = () => {
         </h2>
         <button
           type="button"
-          className="text-gray-400 underline text-decoration-skip"
+          className="text-gray-400 font-medium hover:text-slate-600 underline text-decoration-skip"
           onClick={() => {
             resetForm(); // Сбрасываем форму
             dispatch(clearResult()); // Очищаем результат
@@ -85,7 +85,7 @@ const FormContainer = () => {
           Clear All
         </button>
       </div>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-2 font-medium">
         <div className="flex flex-col">
           <label htmlFor="amount">Mortgage Amount</label>
           <input
@@ -127,7 +127,7 @@ const FormContainer = () => {
 
         <div className="mb-3">
           <label className="mb-2 block">Mortgage Type</label>
-          <div className="cursor-pointer border border-slate-500 rounded-md p-2 mb-2 hover:bg-primary-lime hover:bg-opacity-20">
+          <div className="cursor-pointer border border-slate-500 rounded-md p-2 mb-2 hover:border-primary-lime">
             <label
               htmlFor="repayment"
               className="flex items-center cursor-pointer"
@@ -144,7 +144,7 @@ const FormContainer = () => {
               <span className="ml-2 font-bold text-slate-700">Repayment</span>
             </label>
           </div>
-          <div className="cursor-pointer border border-slate-500 rounded-md p-2 mb-2 hover:bg-primary-lime hover:bg-opacity-20">
+          <div className="cursor-pointer border border-slate-500 rounded-md p-2 mb-2 hover:border-primary-lime">
             <label
               htmlFor="interestOnly"
               className="flex items-center cursor-pointer w-full"
@@ -165,7 +165,7 @@ const FormContainer = () => {
           </div>
         </div>
         <button
-          className="bg-primary-lime text-slate-950 font-bold px-4 py-3 flex gap-2 rounded-3xl w-2/3"
+          className="bg-primary-lime text-slate-950 font-bold px-4 py-3 flex gap-2 rounded-3xl w-2/3 hover:bg-primary-lime hover:bg-opacity-70"
           type="submit"
         >
           <img src={iconCalculator} alt="" />

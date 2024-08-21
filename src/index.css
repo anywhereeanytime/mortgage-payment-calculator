@@ -8,24 +8,41 @@ body {
   background: hsl(202, 86%, 94%);
 }
 
-.input-container {
+/* Для скрытия спиннеров на инпутах в Firefox и Chrome */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Основной стиль радио-кнопок */
+input[type="radio"] {
+  appearance: none; /* Убирает стандартный вид радио-кнопок */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #d1d5db; /* Цвет бордера по умолчанию */
+  outline: none;
+  cursor: pointer;
   position: relative;
-  display: flex;
-  align-items: center;
-  border: 1px solid #ddd; /* Подходящий цвет для границы */
-  border-radius: 0.375rem; /* Радиус для закругления */
 }
 
-.input-container input {
-  padding-left: 2.5rem; /* Отступ слева для текста */
-  border: none; /* Убираем границу для инпута */
-  border-radius: 0.375rem; /* Устанавливаем радиус закругления */
+/* Стиль для выбранной радио-кнопки */
+input[type="radio"]:checked {
+  border: 2px solid hsl(61, 70%, 52%); /* Цвет бордера при выборе */
 }
 
-.input-container .dollar-sign {
-  position: absolute; /* Отступ от левого края */
-  background-color: hsl(202, 86%, 94%); /* Голубой фон */
-  color: hsl(200, 24%, 40%);
-  padding: 0.25rem 0.5rem; /* Отступы для значка */ /* Закругление фона */
-  font-size: 1rem; /* Размер шрифта для значка */
+/* Стиль для выбранной радио-кнопки */
+input[type="radio"]:checked::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: hsl(61, 70%, 52%); /* Цвет при выборе */
+  transform: translate(-50%, -50%);
 }

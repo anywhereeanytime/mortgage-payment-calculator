@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { toggleResult, setMonthlyPayment, clearResult } from "./resultSlice";
 import iconCalculator from "./assets/icon-calculator.svg";
+import { inputsData } from "./data.js";
 
 const FormContainer = () => {
   const [formData, setFormData] = useState({
@@ -69,103 +70,102 @@ const FormContainer = () => {
   };
 
   return (
-    <div className="bg-white p-10 text-slate-500 rounded-tl-3xl rounded-bl-3xl">
-      <div className="flex justify-between items-center mb-5">
-        <h2 className="text-slate-700 text-2xl font-extrabold">
+    <div className="bg-white px-5 py-8 md:p-10 text-slate-500 rounded-tl-3xl rounded-bl-3xl">
+      <div className="md:flex md:justify-between md:items-center mb-5">
+        <h2 className="text-slate-700 text-2xl font-extrabold mb-2 sm:mb-0">
           Mortgage Calculator
         </h2>
         <button
           type="button"
           className="text-gray-400 font-medium hover:text-slate-600 underline text-decoration-skip"
           onClick={() => {
-            resetForm(); // Сбрасываем форму
-            dispatch(clearResult()); // Очищаем результат
+            resetForm();
+            dispatch(clearResult());
           }}
         >
           Clear All
         </button>
       </div>
       <form onSubmit={handleSubmit} className="flex flex-col gap-2 font-medium">
-        <div className="flex flex-col">
-          <label htmlFor="amount">Mortgage Amount</label>
-          <input
-            className="border border-slate-500 rounded-md p-1"
-            id="amount"
-            type="number"
-            name="amount"
-            value={formData.amount}
-            onChange={handleChange}
-            required
-          />
-        </div>
+        {/* Mortgage Amount, которая занимает 2 колонки */}
         <div className="grid grid-cols-2 gap-3">
-          <div className="flex flex-col">
-            <label htmlFor="term">Mortgage Term</label>
-            <input
-              className="border border-slate-500 rounded-md p-1"
-              id="term"
-              type="number"
-              name="term"
-              value={formData.term}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="flex flex-col">
-            <label htmlFor="interestRate">Interest Rate</label>
-            <input
-              className="border border-slate-500 rounded-md p-1"
-              type="number"
-              id="interestRate"
-              name="interestRate"
-              value={formData.interestRate}
-              onChange={handleChange}
-              required
-            />
+          {inputsData
+            .filter((input) => input.id === "amount")
+            .map((input, index) => (
+              <div className="flex flex-col col-span-2" key={input.id || index}>
+                <label htmlFor={input.id}>{input.label}</label>
+                <input
+                  className="border border-slate-500 rounded-md p-1"
+                  id={input.id}
+                  type={input.type}
+                  name={input.name}
+                  value={formData[input.name]} // Используйте значение из formData
+                  onChange={handleChange}
+                  required={input.validation && input.validation.required}
+                />
+              </div>
+            ))}
+        </div>
+
+        {/* Mortgage Term и Interest Rate */}
+        <div className="grid grid-cols-2 gap-3 mb-2">
+          {inputsData
+            .filter(
+              (input) => input.id === "term" || input.id === "interestRate"
+            )
+            .map((input, index) => (
+              <div className="flex flex-col" key={input.id || index}>
+                <label htmlFor={input.id}>{input.label}</label>
+                <input
+                  className="border border-slate-500 rounded-md p-1"
+                  id={input.id}
+                  type={input.type}
+                  name={input.name}
+                  value={formData[input.name]}
+                  onChange={handleChange}
+                  required={input.validation && input.validation.required}
+                />
+              </div>
+            ))}
+        </div>
+
+        {/* Mortgage Type (Repayment и Interest Only) */}
+        <div className="mb-3">
+          <label className="mb-2 block">Mortgage Type</label>
+          <div className="grid grid-cols-1">
+            {inputsData
+              .filter((input) => input.id === "mortgageType")
+              .map((input) =>
+                input.options.map((option) => (
+                  <div
+                    key={option.id}
+                    className="cursor-pointer border border-slate-500 rounded-md p-2 mb-2 hover:border-primary-lime"
+                  >
+                    <label
+                      htmlFor={option.id}
+                      className="flex items-center cursor-pointer"
+                    >
+                      <input
+                        className="p-1"
+                        type="radio"
+                        id={option.id}
+                        name={input.name}
+                        value={option.value}
+                        checked={formData[input.name] === option.value}
+                        onChange={handleChange}
+                      />
+                      <span className="ml-2 font-bold text-slate-700">
+                        {option.label}
+                      </span>
+                    </label>
+                  </div>
+                ))
+              )}
           </div>
         </div>
 
-        <div className="mb-3">
-          <label className="mb-2 block">Mortgage Type</label>
-          <div className="cursor-pointer border border-slate-500 rounded-md p-2 mb-2 hover:border-primary-lime">
-            <label
-              htmlFor="repayment"
-              className="flex items-center cursor-pointer"
-            >
-              <input
-                className="p-1"
-                type="radio"
-                id="repayment"
-                name="mortgageType"
-                value="repayment"
-                checked={formData.mortgageType === "repayment"}
-                onChange={handleChange}
-              />
-              <span className="ml-2 font-bold text-slate-700">Repayment</span>
-            </label>
-          </div>
-          <div className="cursor-pointer border border-slate-500 rounded-md p-2 mb-2 hover:border-primary-lime">
-            <label
-              htmlFor="interestOnly"
-              className="flex items-center cursor-pointer w-full"
-            >
-              <input
-                className="p-1"
-                type="radio"
-                id="interestOnly"
-                name="mortgageType"
-                value="interestOnly"
-                checked={formData.mortgageType === "interestOnly"}
-                onChange={handleChange}
-              />
-              <span className="ml-2 font-bold text-slate-700">
-                Interest only
-              </span>
-            </label>
-          </div>
-        </div>
         <button
-          className="bg-primary-lime text-slate-950 font-bold px-4 py-3 flex gap-2 rounded-3xl w-2/3 hover:bg-primary-lime hover:bg-opacity-70"
+          className="bg-primary-lime text-slate-950 font-bold px-4 py-3 flex justify-center gap-2 rounded-3xl w-full md:w-2/3 hover:bg-primary-lime hover:bg-opacity-70"
           type="submit"
         >
           <img src={iconCalculator} alt="" />

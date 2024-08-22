@@ -87,7 +87,10 @@ const FormContainer = () => {
           Clear All
         </button>
       </div>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-2 font-medium">
+      <form
+        onSubmit={handleSubmit}
+        className="grid gap-2 grid-cols-2 font-medium"
+      >
         {inputsData.map((input) => {
           if (input.type === "radio") {
             return input.options.map((option) => (
@@ -111,13 +114,12 @@ const FormContainer = () => {
                 name={input.name}
                 value={formData[input.name]}
                 handleChange={handleChange}
-                className={input.id === "amount" ? "col-span-2" : ""}
               />
             );
           }
         })}
         <button
-          className="bg-primary-lime text-slate-950 font-bold px-4 py-3 flex justify-center gap-2 rounded-3xl w-full md:w-2/3 hover:bg-primary-lime hover:bg-opacity-70"
+          className="bg-primary-lime text-slate-950 font-bold px-4 py-3 flex justify-center gap-2 rounded-3xl w-full md:w-2/3 hover:bg-primary-lime hover:bg-opacity-70 col-span-2 mt-3"
           type="submit"
         >
           <img src={iconCalculator} alt="" />

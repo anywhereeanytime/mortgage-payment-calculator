@@ -2,9 +2,11 @@ const Input = ({ label, id, type, name, value, handleChange, options }) => {
   return (
     <div
       className={`flex ${
+        id === "term" || id === "interestRate" ? "col-span-1" : "col-span-2"
+      } ${
         type === "radio"
-          ? "flex-row-reverse items-center justify-end border border-slate-500 rounded-md p-2"
-          : "col-span-2 flex-col"
+          ? "flex-row-reverse items-center justify-end border border-slate-500 hover:border-primary-lime rounded-md p-2"
+          : "flex-col"
       }`}
     >
       {label && (

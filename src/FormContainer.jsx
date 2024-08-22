@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { toggleResult, setMonthlyPayment, clearResult } from "./resultSlice";
 import iconCalculator from "./assets/icon-calculator.svg";
 import { inputsData } from "./data.js";
+import Input from "./Input.jsx";
 
 const FormContainer = () => {
   const [formData, setFormData] = useState({
@@ -87,83 +88,34 @@ const FormContainer = () => {
         </button>
       </div>
       <form onSubmit={handleSubmit} className="flex flex-col gap-2 font-medium">
-        {/* Mortgage Amount, которая занимает 2 колонки */}
-        <div className="grid grid-cols-2 gap-3">
-          {inputsData
-            .filter((input) => input.id === "amount")
-            .map((input, index) => (
-              <div className="flex flex-col col-span-2" key={input.id || index}>
-                <label htmlFor={input.id}>{input.label}</label>
-                <input
-                  className="border border-slate-500 rounded-md p-1"
-                  id={input.id}
-                  type={input.type}
-                  name={input.name}
-                  value={formData[input.name]} // Используйте значение из formData
-                  onChange={handleChange}
-                  required={input.validation && input.validation.required}
-                />
-              </div>
-            ))}
-        </div>
-
-        {/* Mortgage Term и Interest Rate */}
-        <div className="grid grid-cols-2 gap-3 mb-2">
-          {inputsData
-            .filter(
-              (input) => input.id === "term" || input.id === "interestRate"
-            )
-            .map((input, index) => (
-              <div className="flex flex-col" key={input.id || index}>
-                <label htmlFor={input.id}>{input.label}</label>
-                <input
-                  className="border border-slate-500 rounded-md p-1"
-                  id={input.id}
-                  type={input.type}
-                  name={input.name}
-                  value={formData[input.name]}
-                  onChange={handleChange}
-                  required={input.validation && input.validation.required}
-                />
-              </div>
-            ))}
-        </div>
-
-        {/* Mortgage Type (Repayment и Interest Only) */}
-        <div className="mb-3">
-          <label className="mb-2 block">Mortgage Type</label>
-          <div className="grid grid-cols-1">
-            {inputsData
-              .filter((input) => input.id === "mortgageType")
-              .map((input) =>
-                input.options.map((option) => (
-                  <div
-                    key={option.id}
-                    className="cursor-pointer border border-slate-500 rounded-md p-2 mb-2 hover:border-primary-lime"
-                  >
-                    <label
-                      htmlFor={option.id}
-                      className="flex items-center cursor-pointer"
-                    >
-                      <input
-                        className="p-1"
-                        type="radio"
-                        id={option.id}
-                        name={input.name}
-                        value={option.value}
-                        checked={formData[input.name] === option.value}
-                        onChange={handleChange}
-                      />
-                      <span className="ml-2 font-bold text-slate-700">
-                        {option.label}
-                      </span>
-                    </label>
-                  </div>
-                ))
-              )}
-          </div>
-        </div>
-
+        {inputsData.map((input) => {
+          if (input.type === "radio") {
+            return input.options.map((option) => (
+              <Input
+                key={option.id}
+                label={option.label}
+                id={option.id}
+                type="radio"
+                name={input.name}
+                value={option.value}
+                handleChange={handleChange}
+              />
+            ));
+          } else {
+            return (
+              <Input
+                key={input.id}
+                label={input.label}
+                id={input.id}
+                type={input.type}
+                name={input.name}
+                value={formData[input.name]}
+                handleChange={handleChange}
+                className={input.id === "amount" ? "col-span-2" : ""}
+              />
+            );
+          }
+        })}
         <button
           className="bg-primary-lime text-slate-950 font-bold px-4 py-3 flex justify-center gap-2 rounded-3xl w-full md:w-2/3 hover:bg-primary-lime hover:bg-opacity-70"
           type="submit"

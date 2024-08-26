@@ -19,5 +19,10 @@ export default {
       },
     },
   },
+  variants: {
+    extend: {
+      backgroundColor: ["checked"],
+    },
+  },
   plugins: [],
 };

@@ -5,6 +5,7 @@ export const inputsData = [
     type: "number",
     name: "amount",
     value: "amount",
+    sign: "$",
     validation: {
       required: "This field is required",
     },
@@ -15,6 +16,7 @@ export const inputsData = [
     type: "number",
     name: "term",
     value: "term",
+    sign: "years",
     validation: {
       required: "This field is required",
     },
@@ -25,6 +27,7 @@ export const inputsData = [
     type: "number",
     name: "interestRate",
     value: "interestRate",
+    sign: "%",
     validation: {
       required: "This field is required",
     },

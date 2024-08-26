@@ -91,19 +91,29 @@ const FormContainer = () => {
         onSubmit={handleSubmit}
         className="grid gap-2 grid-cols-2 font-medium"
       >
+        {/* Проверяем, есть ли радиокнопки и добавляем заголовок перед ними */}
         {inputsData.map((input) => {
           if (input.type === "radio") {
-            return input.options.map((option) => (
-              <Input
-                key={option.id}
-                label={option.label}
-                id={option.id}
-                type="radio"
-                name={input.name}
-                value={option.value}
-                handleChange={handleChange}
-              />
-            ));
+            return (
+              <div key={input.id} className="col-span-2">
+                {/* Заголовок перед радио кнопками */}
+                <div className="font-bold text-md text-slate-700 mt-2 mb-2">
+                  {input.label}
+                </div>
+                {/* Рендеринг радио кнопок */}
+                {input.options.map((option) => (
+                  <Input
+                    key={option.id}
+                    label={option.label}
+                    id={option.id}
+                    type="radio"
+                    name={input.name}
+                    value={option.value}
+                    handleChange={handleChange}
+                  />
+                ))}
+              </div>
+            );
           } else {
             return (
               <Input
@@ -114,10 +124,12 @@ const FormContainer = () => {
                 name={input.name}
                 value={formData[input.name]}
                 handleChange={handleChange}
+                sign={input.sign}
               />
             );
           }
         })}
+
         <button
           className="bg-primary-lime text-slate-950 font-bold px-4 py-3 flex justify-center gap-2 rounded-3xl w-full md:w-2/3 hover:bg-primary-lime hover:bg-opacity-70 col-span-2 mt-3"
           type="submit"

@@ -10,20 +10,21 @@ const Input = ({
 }) => {
   return (
     <div
-      tabIndex="0"
-      className={`flex ${
+      className={`flex group ${
         id === "term" || id === "interestRate" ? "col-span-1" : "col-span-2"
       } ${
         type === "radio"
-          ? "flex-row-reverse items-center justify-end border border-slate-500 hover:border-primary-lime rounded-md p-2 mb-2"
+          ? "flex-row-reverse items-center justify-end border border-slate-400 hover:border-primary-lime rounded-md p-2 mb-3"
           : "flex-col"
       }`}
     >
       {label && (
         <label
           htmlFor={id}
-          className={`text-slate-700 font-bold cursor-pointer ${
-            type === "radio" ? "ml-2" : ""
+          className={`text-slate-500 cursor-pointer ${
+            type === "radio"
+              ? "ml-2 text-slate-700 font-bold"
+              : "font-semibold mb-1"
           }`}
         >
           {label}
@@ -53,11 +54,13 @@ const Input = ({
       ) : (
         <div>
           <div
-            className={`flex justify-center ${
+            className={`flex group ${
               type !== "radio"
-                ? `border border-slate-500 ${
+                ? `border border-slate-400 ${
                     name === "amount" ? "flex-row-reverse" : "flex-row"
-                  } items-start rounded-md`
+                  } items-start rounded-md 
+                  group-hover:border-slate-900 group-focus-within:border-primary-lime 
+                  focus-within:border-primary-lime`
                 : ""
             }`}
           >
@@ -67,14 +70,15 @@ const Input = ({
               name={name}
               value={value}
               onChange={handleChange}
-              className="p-1 w-full rounded-md"
+              className="p-1 text-slate-700 font-semibold w-full rounded-md focus:outline-none cursor-pointer"
+              tabIndex="0"
             />
             {sign && (
               <span
-                className={`w-fit px-3 py-1 bg-blue-50 text-slate-600 font-bold col-span-1 ${
+                className={`w-fit px-3 py-1 text-slate-600 bg-slate-100 font-bold col-span-1 group-focus-within:bg-primary-lime ${
                   name === "amount"
                     ? "rounded-tl-md rounded-bl-md"
-                    : "rounded-tr-md rounded-br-md"
+                    : "rounded-tr-md rounded-br-md "
                 }`}
               >
                 {sign}

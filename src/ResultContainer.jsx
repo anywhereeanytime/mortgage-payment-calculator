@@ -10,7 +10,7 @@ const ResultContainer = () => {
     : null;
 
   return (
-    <div className="bg-slate-800 p-6 md:p-10 md:rounded-tr-3xl md:rounded-br-3xl md:rounded-bl-3xl text-slate-400 flex items-center justify-center">
+    <div className="bg-slate-800 p-6 md:p-9 md:rounded-tr-3xl md:rounded-br-3xl md:rounded-bl-3xl text-slate-400 flex items-start justify-center">
       {isResultShown && monthlyPayment ? (
         <div>
           <h2 className="text-slate-100 text-2xl font-bold mb-3">

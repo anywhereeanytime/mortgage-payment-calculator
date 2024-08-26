@@ -97,7 +97,7 @@ const FormContainer = () => {
             return (
               <div key={input.id} className="col-span-2">
                 {/* Заголовок перед радио кнопками */}
-                <div className="font-bold text-md text-slate-700 mt-2 mb-2">
+                <div className="font-semibold text-md text-slate-500 mt-2 mb-2">
                   {input.label}
                 </div>
                 {/* Рендеринг радио кнопок */}

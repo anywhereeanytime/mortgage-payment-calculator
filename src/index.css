@@ -15,16 +15,8 @@ input[type="number"]::-webkit-outer-spin-button {
   margin: 0;
 }
 
-/* input[type="number"] {
-  border-width: 1px;
-  border-color: #64748b;
-  border-radius: 0.375rem;
-  padding: 0.25rem;
-}  */
-
-/* Основной стиль радио-кнопок */
 input[type="radio"] {
-  appearance: none; /* Убирает стандартный вид радио-кнопок */
+  /* Убирает стандартный вид радио-кнопок */
   -webkit-appearance: none;
   -moz-appearance: none;
   width: 20px;
@@ -34,11 +26,13 @@ input[type="radio"] {
   outline: none;
   cursor: pointer;
   position: relative;
+  box-sizing: border-box;
 }
 
 /* Стиль для выбранной радио-кнопки */
 input[type="radio"]:checked {
-  border: 2px solid hsl(61, 70%, 52%); /* Цвет бордера при выборе */
+  border: 2px solid hsl(61, 70%, 52%);
+  box-sizing: border-box;
 }
 
 /* Стиль для выбранной радио-кнопки */
@@ -47,9 +41,10 @@ input[type="radio"]:checked::before {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 12px;
-  height: 12px;
+  width: 11px;
+  height: 10px;
   border-radius: 50%;
   background-color: hsl(61, 70%, 52%); /* Цвет при выборе */
   transform: translate(-50%, -50%);
+  box-sizing: border-box;
 }

@@ -156,7 +156,14 @@ const FormContainer = () => {
             );
           } else {
             return (
-              <div key={input.id} className="relative">
+              <div
+                key={input.id}
+                className={`${
+                  input.id === "term" || input.id === "interestRate"
+                    ? "col-span-1"
+                    : "col-span-2"
+                }`}
+              >
                 <Input
                   label={input.label}
                   id={input.id}

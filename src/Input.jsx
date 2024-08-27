@@ -16,8 +16,6 @@ const Input = ({
   return (
     <div
       className={`flex group ${
-        id === "term" || id === "interestRate" ? "col-span-1" : "col-span-2"
-      } ${
         type === "radio"
           ? "flex-row-reverse items-center justify-end border border-slate-400 hover:border-primary-lime rounded-md p-2 mb-3"
           : "flex-col"
@@ -80,7 +78,7 @@ const Input = ({
             />
             {sign && (
               <span
-                className={`w-fit px-3 py-1 font-semibold col-span-1 ${
+                className={`w-fit px-3 py-1 font-semibold col-span-1 group-focus-within:bg-primary-lime ${
                   hasError
                     ? "bg-red-500 text-white"
                     : "text-slate-600 bg-slate-100"

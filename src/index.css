@@ -16,26 +16,23 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 input[type="radio"] {
-  /* Убирает стандартный вид радио-кнопок */
   -webkit-appearance: none;
   -moz-appearance: none;
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  border: 2px solid #d1d5db; /* Цвет бордера по умолчанию */
+  border: 2px solid #d1d5db;
   outline: none;
   cursor: pointer;
   position: relative;
   box-sizing: border-box;
 }
 
-/* Стиль для выбранной радио-кнопки */
 input[type="radio"]:checked {
   border: 2px solid hsl(61, 70%, 52%);
   box-sizing: border-box;
 }
 
-/* Стиль для выбранной радио-кнопки */
 input[type="radio"]:checked::before {
   content: "";
   position: absolute;
@@ -44,7 +41,10 @@ input[type="radio"]:checked::before {
   width: 11px;
   height: 10px;
   border-radius: 50%;
-  background-color: hsl(61, 70%, 52%); /* Цвет при выборе */
+  background-color: hsl(61, 70%, 52%);
   transform: translate(-50%, -50%);
   box-sizing: border-box;
 }
+
+/* При клике на радиокнопку цвет не меняется на желтый
+Не табаются радиокнопки */

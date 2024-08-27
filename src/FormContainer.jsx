@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toggleResult, setMonthlyPayment, clearResult } from "./resultSlice";
+import { setError, clearError, clearAllErrors } from "./formErrorSlice";
 import iconCalculator from "./assets/icon-calculator.svg";
 import { inputsData } from "./data.js";
 import Input from "./Input.jsx";
@@ -13,6 +14,7 @@ const FormContainer = () => {
     mortgageType: "",
   });
 
+  const errors = useSelector((state) => state.formError.errors);
   const dispatch = useDispatch();
 
   const handleChange = (e) => {
@@ -21,6 +23,9 @@ const FormContainer = () => {
       ...prevData,
       [name]: value,
     }));
+
+    // Clear error for the input being changed
+    dispatch(clearError(name));
   };
 
   const resetForm = () => {
@@ -30,6 +35,7 @@ const FormContainer = () => {
       interestRate: "",
       mortgageType: "",
     });
+    dispatch(clearAllErrors());
   };
 
   const calculateMonthlyPayment = () => {
@@ -60,6 +66,34 @@ const FormContainer = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const { amount, term, interestRate, mortgageType } = formData;
+
+    let hasErrors = false;
+    if (!amount) {
+      dispatch(
+        setError({ field: "amount", message: "This field is required" })
+      );
+      hasErrors = true;
+    }
+    if (!term) {
+      dispatch(setError({ field: "term", message: "This field is required" }));
+      hasErrors = true;
+    }
+    if (!interestRate) {
+      dispatch(
+        setError({ field: "interestRate", message: "This field is required" })
+      );
+      hasErrors = true;
+    }
+    if (!mortgageType) {
+      dispatch(
+        setError({ field: "mortgageType", message: "This field is required" })
+      );
+      hasErrors = true;
+    }
+
+    if (hasErrors) return;
 
     const monthlyPayment = calculateMonthlyPayment();
     if (monthlyPayment) {
@@ -112,20 +146,33 @@ const FormContainer = () => {
                     handleChange={handleChange}
                   />
                 ))}
+                {/* Display error message for radio buttons if required */}
+                {input.name === "mortgageType" && errors[input.name] && (
+                  <div className="text-red-500 text-sm mt-1">
+                    {errors[input.name]}
+                  </div>
+                )}
               </div>
             );
           } else {
             return (
-              <Input
-                key={input.id}
-                label={input.label}
-                id={input.id}
-                type={input.type}
-                name={input.name}
-                value={formData[input.name]}
-                handleChange={handleChange}
-                sign={input.sign}
-              />
+              <div key={input.id} className="relative">
+                <Input
+                  label={input.label}
+                  id={input.id}
+                  type={input.type}
+                  name={input.name}
+                  value={formData[input.name]}
+                  handleChange={handleChange}
+                  sign={input.sign}
+                />
+                {/* Display error message under the input field if required */}
+                {errors[input.name] && (
+                  <div className="text-red-500 text-sm mt-1">
+                    {errors[input.name]}
+                  </div>
+                )}
+              </div>
             );
           }
         })}

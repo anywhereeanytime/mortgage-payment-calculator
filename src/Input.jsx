@@ -1,3 +1,5 @@
+import { useSelector } from "react-redux";
+
 const Input = ({
   label,
   id,
@@ -8,6 +10,9 @@ const Input = ({
   options,
   sign,
 }) => {
+  const errors = useSelector((state) => state.formError.errors);
+  const hasError = errors[name];
+
   return (
     <div
       className={`flex group ${
@@ -23,7 +28,7 @@ const Input = ({
           htmlFor={id}
           className={`text-slate-500 cursor-pointer ${
             type === "radio"
-              ? "ml-2 text-slate-700 font-bold"
+              ? "ml-2 text-slate-700 font-bold "
               : "font-semibold mb-1"
           }`}
         >
@@ -75,7 +80,11 @@ const Input = ({
             />
             {sign && (
               <span
-                className={`w-fit px-3 py-1 text-slate-600 bg-slate-100 font-bold col-span-1 group-focus-within:bg-primary-lime ${
+                className={`w-fit px-3 py-1 font-semibold col-span-1 ${
+                  hasError
+                    ? "bg-red-500 text-white"
+                    : "text-slate-600 bg-slate-100"
+                } ${
                   name === "amount"
                     ? "rounded-tl-md rounded-bl-md"
                     : "rounded-tr-md rounded-br-md "

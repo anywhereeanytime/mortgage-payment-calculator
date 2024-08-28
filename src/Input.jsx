@@ -48,6 +48,7 @@ const Input = ({
               value={option.value}
               checked={value === option.value}
               onChange={handleChange}
+              tabIndex={0}
             />
             <span className="ml-2 text-slate-700 font-bold">
               {option.label}

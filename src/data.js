@@ -2,7 +2,7 @@ export const inputsData = [
   {
     label: "Mortgage Amount",
     id: "amount",
-    type: "number",
+    type: "text",
     name: "amount",
     value: "amount",
     sign: "$",
@@ -13,7 +13,7 @@ export const inputsData = [
   {
     label: "Mortgage Term",
     id: "term",
-    type: "number",
+    type: "text",
     name: "term",
     value: "term",
     sign: "years",
@@ -24,7 +24,7 @@ export const inputsData = [
   {
     label: "Interest Rate",
     id: "interestRate",
-    type: "number",
+    type: "text",
     name: "interestRate",
     value: "interestRate",
     sign: "%",

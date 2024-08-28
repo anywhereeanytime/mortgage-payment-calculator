@@ -4,10 +4,7 @@ import illustrationEmpty from "./assets/illustration-empty.svg";
 const ResultContainer = () => {
   const isResultShown = useSelector((state) => state.result.isResultShown);
   const monthlyPayment = useSelector((state) => state.result.monthlyPayment);
-
-  const totalRepayment = monthlyPayment
-    ? (monthlyPayment * 12 * 30).toFixed(2)
-    : null;
+  const totalRepayment = useSelector((state) => state.result.totalRepayment);
 
   return (
     <div className="bg-slate-800 p-6 md:p-9 md:rounded-tr-3xl md:rounded-br-3xl md:rounded-bl-3xl text-slate-400 flex items-center justify-center">

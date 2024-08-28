@@ -5,6 +5,7 @@ const resultSlice = createSlice({
   initialState: {
     isResultShown: false,
     monthlyPayment: null,
+    totalRepayment: null,
   },
   reducers: {
     toggleResult(state) {
@@ -13,13 +14,21 @@ const resultSlice = createSlice({
     setMonthlyPayment(state, action) {
       state.monthlyPayment = action.payload;
     },
+    setTotalRepayment(state, action) {
+      state.totalRepayment = action.payload;
+    },
     clearResult(state) {
       state.isResultShown = false;
       state.monthlyPayment = null;
+      state.totalRepayment = null;
     },
   },
 });
 
-export const { toggleResult, setMonthlyPayment, clearResult } =
-  resultSlice.actions;
+export const {
+  toggleResult,
+  setMonthlyPayment,
+  setTotalRepayment,
+  clearResult,
+} = resultSlice.actions;
 export default resultSlice.reducer;

@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleResult, setMonthlyPayment, clearResult } from "./resultSlice";
+import {
+  toggleResult,
+  setMonthlyPayment,
+  setTotalRepayment,
+  clearResult,
+} from "./resultSlice";
 import { setError, clearError, clearAllErrors } from "./formErrorSlice";
 import iconCalculator from "./assets/icon-calculator.svg";
 import { inputsData } from "./data.js";
@@ -39,27 +44,36 @@ const FormContainer = () => {
   };
 
   const calculateMonthlyPayment = () => {
-    const { amount, term, interestRate, mortgageType } = formData;
-    const principal = parseFloat(amount);
-    const monthlyInterestRate = parseFloat(interestRate) / 100 / 12;
-    const numberOfPayments = parseFloat(term) * 12;
+    const principal = parseFloat(formData.amount);
+    const annualInterestRate = parseFloat(formData.interestRate);
+    const years = parseFloat(formData.term);
+    const mortgageType = formData.mortgageType;
 
-    if (!principal || !monthlyInterestRate || !numberOfPayments) return null;
+    // Проверка на наличие необходимых данных
+    if (!principal || !annualInterestRate || !years || !mortgageType)
+      return null;
 
+    const monthlyRate = annualInterestRate / 12 / 100;
+    const termInMonths = years * 12;
     let monthlyPayment;
 
     // Рассчет для Repayment
     if (mortgageType === "repayment") {
       monthlyPayment =
-        (principal *
-          monthlyInterestRate *
-          Math.pow(1 + monthlyInterestRate, numberOfPayments)) /
-        (Math.pow(1 + monthlyInterestRate, numberOfPayments) - 1);
+        (principal * monthlyRate * Math.pow(1 + monthlyRate, termInMonths)) /
+        (Math.pow(1 + monthlyRate, termInMonths) - 1);
 
       // Рассчет для Interest Only
     } else if (mortgageType === "interestOnly") {
-      monthlyPayment = principal * monthlyInterestRate;
+      monthlyPayment = principal * monthlyRate;
     }
+
+    // Вычисление totalRepayment
+    const totalRepayment = monthlyPayment
+      ? (monthlyPayment * termInMonths).toFixed(2)
+      : null;
+
+    dispatch(setTotalRepayment(totalRepayment));
 
     return monthlyPayment.toFixed(2);
   };
@@ -137,10 +151,10 @@ const FormContainer = () => {
                 {/* Рендеринг радио кнопок */}
                 {input.options.map((option) => (
                   <Input
+                    type="radio"
                     key={option.id}
                     label={option.label}
                     id={option.id}
-                    type="radio"
                     name={input.name}
                     value={option.value}
                     handleChange={handleChange}

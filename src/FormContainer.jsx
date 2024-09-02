@@ -1,11 +1,16 @@
 import { useForm } from "react-hook-form";
-import iconCalculator from "./assets/icon-calculator.svg";
 import { inputsData } from "./data.js";
-import Input from "./Input.jsx";
-import { useDispatch } from "react-redux";
-import { setMonthlyPayment, setTotalRepayment } from "./resultSlice";
-import calculateMonthlyPayment from "./calculateMonthlyPayment";
 import { toggleResult } from "./resultSlice";
+import { useDispatch } from "react-redux";
+import {
+  clearResult,
+  setMonthlyPayment,
+  setTotalRepayment,
+} from "./resultSlice";
+import calculateMonthlyPayment from "./calculateMonthlyPayment";
+import Input from "./Input.jsx";
+import store from "./store.js";
+import iconCalculator from "./assets/icon-calculator.svg";
 
 const FormContainer = () => {
   const dispatch = useDispatch();
@@ -18,9 +23,14 @@ const FormContainer = () => {
   } = useForm();
 
   const onSubmit = (data) => {
-    // alert(JSON.stringify(data));
     const { totalRepayment, monthlyPayment } = calculateMonthlyPayment(data);
-    if (monthlyPayment) {
+    // to manage toggle
+    const currentState = store.getState().result;
+    const hasChanges =
+      currentState.monthlyPayment !== monthlyPayment ||
+      currentState.totalRepayment !== totalRepayment;
+
+    if (hasChanges) {
       dispatch(setMonthlyPayment(monthlyPayment));
       dispatch(setTotalRepayment(totalRepayment));
       dispatch(toggleResult());
@@ -29,6 +39,7 @@ const FormContainer = () => {
 
   const onReset = () => {
     reset();
+    dispatch(clearResult());
   };
 
   return (
@@ -69,14 +80,13 @@ const FormContainer = () => {
                     name={input.name}
                     value={option.value}
                     register={register}
+                    errors={errors}
                   />
                 ))}
                 {/* Error message */}
                 <div>
                   {errors?.[input.name] && (
-                    <p className="text-red-500 text-sm mt-1">
-                      This field is required
-                    </p>
+                    <p className="text-red-500 text-sm mt-1">Choose a type</p>
                   )}
                 </div>
               </div>
@@ -102,13 +112,12 @@ const FormContainer = () => {
                   sign={input.sign}
                   name={input.name}
                   register={register}
+                  errors={errors}
                 />
                 {/* Error message */}
                 <div>
                   {errors?.[input.name] && (
-                    <p className="text-red-500 text-sm mt-1">
-                      This field is required
-                    </p>
+                    <p className="text-red-500 text-sm mt-1">Invalid number</p>
                   )}
                 </div>
               </div>

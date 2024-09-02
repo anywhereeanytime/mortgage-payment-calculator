@@ -10,6 +10,8 @@ const Input = ({
   register,
   errors,
 }) => {
+  console.log(errors?.[name]);
+
   return (
     <label
       htmlFor={id}
@@ -70,12 +72,6 @@ const Input = ({
             <input
               {...register(name, {
                 required: true,
-                ...(name === "amount" && {
-                  minLength: {
-                    value: 5,
-                    message: "Invalid number",
-                  },
-                }),
               })}
               id={id}
               type={type}

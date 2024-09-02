@@ -1,5 +1,3 @@
-import { useSelector } from "react-redux";
-
 const Input = ({
   label,
   id,
@@ -9,20 +7,20 @@ const Input = ({
   handleChange,
   options,
   sign,
+  register,
+  errors,
 }) => {
-  const errors = useSelector((state) => state.formError.errors);
-  const hasError = errors[name];
-
   return (
-    <div
-      className={`flex group ${
+    <label
+      htmlFor={id}
+      className={`flex group cursor-pointer ${
         type === "radio"
-          ? "flex-row-reverse items-center justify-end border border-slate-400 hover:border-primary-lime rounded-md p-2 mb-3"
+          ? "flex-row-reverse items-center justify-end border border-slate-400 hover:border-primary-lime rounded-md p-2 mb-3 peer-checked:bg-primary-lime"
           : "flex-col"
       }`}
     >
       {label && (
-        <label
+        <div
           htmlFor={id}
           className={`text-slate-500 cursor-pointer ${
             type === "radio"
@@ -31,29 +29,30 @@ const Input = ({
           }`}
         >
           {label}
-        </label>
+        </div>
       )}
 
       {type === "radio" && options ? (
         options.map((option) => (
-          <label
+          <div
             key={option.id}
             htmlFor={option.id}
             className="flex items-center mb-2 cursor-pointer border border-slate-500 p-2 rounded-md w-full"
           >
             <input
+              {...register(name, { required: true })}
               type="radio"
               id={option.id}
               name={name}
               value={option.value}
-              checked={value === option.value}
               onChange={handleChange}
               tabIndex={0}
+              className="peer hidden"
             />
             <span className="ml-2 text-slate-700 font-bold">
               {option.label}
             </span>
-          </label>
+          </div>
         ))
       ) : (
         <div>
@@ -69,6 +68,15 @@ const Input = ({
             }`}
           >
             <input
+              {...register(name, {
+                required: true,
+                ...(name === "amount" && {
+                  minLength: {
+                    value: 5,
+                    message: "Invalid number",
+                  },
+                }),
+              })}
               id={id}
               type={type}
               name={name}
@@ -80,7 +88,7 @@ const Input = ({
             {sign && (
               <span
                 className={`w-fit px-3 py-1 font-semibold col-span-1 group-focus-within:bg-primary-lime ${
-                  hasError
+                  errors?.[name]
                     ? "bg-red-500 text-white"
                     : "text-slate-600 bg-slate-100"
                 } ${
@@ -95,7 +103,7 @@ const Input = ({
           </div>
         </div>
       )}
-    </div>
+    </label>
   );
 };
 

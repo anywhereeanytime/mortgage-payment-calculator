@@ -1,121 +1,34 @@
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  toggleResult,
-  setMonthlyPayment,
-  setTotalRepayment,
-  clearResult,
-} from "./resultSlice";
-import { setError, clearError, clearAllErrors } from "./formErrorSlice";
+import { useForm } from "react-hook-form";
 import iconCalculator from "./assets/icon-calculator.svg";
 import { inputsData } from "./data.js";
 import Input from "./Input.jsx";
+import { useDispatch } from "react-redux";
+import { setMonthlyPayment, setTotalRepayment } from "./resultSlice";
+import calculateMonthlyPayment from "./calculateMonthlyPayment";
+import { toggleResult } from "./resultSlice";
 
 const FormContainer = () => {
-  const [formData, setFormData] = useState({
-    amount: "",
-    term: "",
-    interestRate: "",
-    mortgageType: "",
-  });
-
-  const errors = useSelector((state) => state.formError.errors);
   const dispatch = useDispatch();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+    reset,
+  } = useForm();
 
-    // Clear error for the input being changed
-    dispatch(clearError(name));
-  };
-
-  const resetForm = () => {
-    setFormData({
-      amount: "",
-      term: "",
-      interestRate: "",
-      mortgageType: "",
-    });
-    dispatch(clearAllErrors());
-  };
-
-  const calculateMonthlyPayment = () => {
-    const principal = parseFloat(formData.amount);
-    const annualInterestRate = parseFloat(formData.interestRate);
-    const years = parseFloat(formData.term);
-    const mortgageType = formData.mortgageType;
-
-    // Проверка на наличие необходимых данных
-    if (!principal || !annualInterestRate || !years || !mortgageType)
-      return null;
-
-    const monthlyRate = annualInterestRate / 12 / 100;
-    const termInMonths = years * 12;
-    let monthlyPayment;
-
-    // Рассчет для Repayment
-    if (mortgageType === "repayment") {
-      monthlyPayment =
-        (principal * monthlyRate * Math.pow(1 + monthlyRate, termInMonths)) /
-        (Math.pow(1 + monthlyRate, termInMonths) - 1);
-
-      // Рассчет для Interest Only
-    } else if (mortgageType === "interestOnly") {
-      monthlyPayment = principal * monthlyRate;
-    }
-
-    // Вычисление totalRepayment
-    const totalRepayment = monthlyPayment
-      ? (monthlyPayment * termInMonths).toFixed(2)
-      : null;
-
-    dispatch(setTotalRepayment(totalRepayment));
-
-    return monthlyPayment.toFixed(2);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const { amount, term, interestRate, mortgageType } = formData;
-
-    let hasErrors = false;
-    if (!amount) {
-      dispatch(
-        setError({ field: "amount", message: "This field is required" })
-      );
-      hasErrors = true;
-    }
-    if (!term) {
-      dispatch(setError({ field: "term", message: "This field is required" }));
-      hasErrors = true;
-    }
-    if (!interestRate) {
-      dispatch(
-        setError({ field: "interestRate", message: "This field is required" })
-      );
-      hasErrors = true;
-    }
-    if (!mortgageType) {
-      dispatch(
-        setError({ field: "mortgageType", message: "This field is required" })
-      );
-      hasErrors = true;
-    }
-
-    if (hasErrors) return;
-
-    const monthlyPayment = calculateMonthlyPayment();
+  const onSubmit = (data) => {
+    // alert(JSON.stringify(data));
+    const { totalRepayment, monthlyPayment } = calculateMonthlyPayment(data);
     if (monthlyPayment) {
       dispatch(setMonthlyPayment(monthlyPayment));
+      dispatch(setTotalRepayment(totalRepayment));
       dispatch(toggleResult());
-    } else {
-      console.error("Calculation failed, check the input values.");
     }
+  };
+
+  const onReset = () => {
+    reset();
   };
 
   return (
@@ -127,16 +40,13 @@ const FormContainer = () => {
         <button
           type="button"
           className="text-gray-400 font-medium hover:text-slate-600 underline text-decoration-skip"
-          onClick={() => {
-            resetForm();
-            dispatch(clearResult());
-          }}
+          onClick={onReset}
         >
           Clear All
         </button>
       </div>
       <form
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmit(onSubmit)}
         className="grid gap-2 grid-cols-2 font-medium"
       >
         {/* Проверяем, есть ли радиокнопки и добавляем заголовок перед ними */}
@@ -144,11 +54,12 @@ const FormContainer = () => {
           if (input.type === "radio") {
             return (
               <div key={input.id} className="col-span-2">
-                {/* Заголовок перед радио кнопками */}
+                {/* Mortgage Type */}
                 <div className="font-semibold text-md text-slate-500 mt-2 mb-2">
                   {input.label}
                 </div>
-                {/* Рендеринг радио кнопок */}
+                {/* Repayment
+                    Interest only */}
                 {input.options.map((option) => (
                   <Input
                     type="radio"
@@ -157,18 +68,24 @@ const FormContainer = () => {
                     id={option.id}
                     name={input.name}
                     value={option.value}
-                    handleChange={handleChange}
+                    register={register}
                   />
                 ))}
-                {/* Display error message for radio buttons if required */}
-                {input.name === "mortgageType" && errors[input.name] && (
-                  <div className="text-red-500 text-sm mt-1">
-                    {errors[input.name]}
-                  </div>
-                )}
+                {/* Error message */}
+                <div>
+                  {errors?.[input.name] && (
+                    <p className="text-red-500 text-sm mt-1">
+                      This field is required
+                    </p>
+                  )}
+                </div>
               </div>
             );
           } else {
+            {
+              /* Mortgage Amount
+              Mortgage Term    Interest rate */
+            }
             return (
               <div
                 key={input.id}
@@ -182,17 +99,18 @@ const FormContainer = () => {
                   label={input.label}
                   id={input.id}
                   type={input.type}
-                  name={input.name}
-                  value={formData[input.name]}
-                  handleChange={handleChange}
                   sign={input.sign}
+                  name={input.name}
+                  register={register}
                 />
-                {/* Display error message under the input field if required */}
-                {errors[input.name] && (
-                  <div className="text-red-500 text-sm mt-1">
-                    {errors[input.name]}
-                  </div>
-                )}
+                {/* Error message */}
+                <div>
+                  {errors?.[input.name] && (
+                    <p className="text-red-500 text-sm mt-1">
+                      This field is required
+                    </p>
+                  )}
+                </div>
               </div>
             );
           }
